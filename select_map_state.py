@@ -52,6 +52,25 @@ def handle_events():
                     pass
                 else:
                     mario.selectY -= 1
+            elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
+                if (mario.selectX, mario.selectY) == (-1, 1):
+                    print(1)
+                elif (mario.selectX, mario.selectY) == (0, 1):
+                    print(2)
+                elif (mario.selectX, mario.selectY) == (1, 1):
+                    print(3)
+                elif (mario.selectX, mario.selectY) == (-1, 0):
+                    print(4)
+                elif (mario.selectX, mario.selectY) == (0, 0):
+                    print(5)
+                elif (mario.selectX, mario.selectY) == (1, 0):
+                    print(6)
+                elif (mario.selectX, mario.selectY) == (-1, -1):
+                    print(7)
+                elif (mario.selectX, mario.selectY) == (0, -1):
+                    print(8)
+                elif (mario.selectX, mario.selectY) == (1, -1):
+                    print(9)
 
 
 def update():
