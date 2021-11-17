@@ -7,10 +7,11 @@ from ice_ground import IceGround
 from gumba import Gumba
 
 name = "Stage3"
-ground = None
+ground = []
 mario = None
 background = None
 gumbas = []
+Touching = 0
 
 def collide(a, b):
     # fill here
@@ -24,20 +25,17 @@ def collide(a, b):
 
 def enter():
     global ground
-    ground = [IceGround() for i in range(4)]
+    ground = [IceGround() for i in range(1)]
     game_world.add_objects(ground, 0)
 
     global mario
     mario = Mario()
     game_world.add_object(mario, 1)
 
-    global gumbas
-    gumbas = [Gumba() for i in range(5)]
-    game_world.add_objects(gumbas, 2)
-
     global background
     if background == None:
         background = load_image('image/background.png')
+
 
 def exit():
     global background
@@ -57,11 +55,13 @@ def handle_events():
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
-    for gumba in gumbas:
-        if collide(mario, gumba):
-            gumba.image = load_image('image/monster/gumba/dead.png')
-            gumbas.remove(gumba)
-            game_world.remove_object(gumba)
+    for air in ground:
+        if collide(air, mario):
+            mario.Touching = 0
+            print("touch")
+        else:
+            mario.Touching = 1
+            print("air")
 
 
 def draw():

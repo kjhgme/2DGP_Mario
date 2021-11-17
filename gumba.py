@@ -14,13 +14,16 @@ TIME_PER_ACTION = 5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
+n = 0
 class Gumba:
     def __init__(self):
+        global n
         self.image = load_image('image/monster/gumba/gumbaL/0.png')
         self.frame = 0
         self.direction = 0
-        self.x = 500
+        self.x = 300 + n
         self.y = 90
+        n += 100
 
     def update(self):
         self.frame = (self.frame + GUMBA_SPEED_PPS * game_framework.frame_time) % 5

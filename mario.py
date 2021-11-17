@@ -136,7 +136,7 @@ next_state_table = {
 class Mario:
     def __init__(self):
         self.mode = 0
-        self.x, self.y = 20, 100
+        self.x, self.y = 20, 104
         self.image = load_image('image/mario/smallmario/marioR/stand.png')
         self.font = load_font('ENCR10B.TTF', 16)
         self.dir = 1

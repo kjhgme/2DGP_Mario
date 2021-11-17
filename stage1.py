@@ -7,7 +7,7 @@ from ground import Ground
 from gumba import Gumba
 
 name = "Stage1"
-ground = None
+ground = []
 mario = None
 background = None
 gumbas = []

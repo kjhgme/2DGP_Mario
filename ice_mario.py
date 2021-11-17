@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import game_world
+import game_over
 
 # Mario Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -8,6 +8,7 @@ RUN_SPEED_KMPH = 20.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+FALL_SPEED = 200
 
 # Mario Action Speed
 TIME_PER_ACTION = 0.15
@@ -29,6 +30,7 @@ key_event_table = {
 # Mario States
 JumpPoint = 100
 i = 0
+
 class IdleState:
     def enter(mario, event):
         if event == RIGHT_DOWN:
@@ -49,7 +51,9 @@ class IdleState:
             pass
 
     def do(mario):
-        global JumpPoint, i
+        global JumpPoint, i, n
+        if mario.Touching == 1:
+            mario.y -= FALL_SPEED * game_framework.frame_time
         if mario.mode == 0:
             if mario.dir == 1:
                 mario.image = load_image('image/mario/smallmario/marioR/stand.png')
@@ -59,8 +63,9 @@ class IdleState:
                     mario.image = load_image('image/mario/smallmario/marioR/jump.png')
                     i += 0.5
                     if i >= 100:
-                        mario.jump = 0
-                        i = 0
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            i = 0
             elif mario.dir == -1:
                 mario.image = load_image('image/mario/smallmario/marioL/stand.png')
                 if mario.jump >= 1:
@@ -69,10 +74,9 @@ class IdleState:
                     mario.image = load_image('image/mario/smallmario/marioL/jump.png')
                     i += 0.5
                     if i >= 100:
-                        mario.jump = 0
-                        i = 0
-
-
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            i = 0
 
 
     def draw(mario):        # mode 에 따라서 변경필요
@@ -99,6 +103,8 @@ class RunState:
 
     def do(mario):
         global JumpPoint, i
+        if mario.Touching == 1:
+            mario.y -= FALL_SPEED * game_framework.frame_time
         mario.frame = (mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 22
         mario.x += mario.velocity * game_framework.frame_time
         mario.x = clamp(25, mario.x, 1600 - 25)
@@ -111,8 +117,9 @@ class RunState:
                     mario.image = load_image('image/mario/smallmario/marioR/jump.png')
                     i += 0.5
                     if i >= 100:
-                        mario.jump = 0
-                        i = 0
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            i = 0
             elif mario.dir == -1:
                 mario.image = load_image('image/mario/smallmario/marioL/' + str(int(mario.frame)) + '.png')
                 if mario.jump >= 1:
@@ -121,8 +128,9 @@ class RunState:
                     mario.image = load_image('image/mario/smallmario/marioL/jump.png')
                     i += 0.5
                     if i >= 100:
-                        mario.jump = 0
-                        i = 0
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            i = 0
 
     def draw(mario):
         mario.image.clip_draw(0, 0, 50, 80, mario.x, mario.y)
@@ -135,13 +143,14 @@ next_state_table = {
 class Mario:
     def __init__(self):
         self.mode = 0       # mode 0 = small, 1 = big, 2 = flower
-        self.x, self.y = 20, 100
+        self.x, self.y = 20, 104
         self.image = load_image('image/mario/smallmario/marioR/stand.png')
         self.font = load_font('ENCR10B.TTF', 16)
         self.dir = 1
         self.velocity = 0
         self.frame = 0
         self.jump = 0
+        self.Touching = 0
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
@@ -162,6 +171,8 @@ class Mario:
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
+        if self.y <= -10:
+            game_framework.change_state(game_over)
 
     def draw(self):
         self.cur_state.draw(self)
