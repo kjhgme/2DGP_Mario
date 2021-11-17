@@ -1,3 +1,4 @@
+# stage3용 ice tile
 from pico2d import *
 
 n = 4

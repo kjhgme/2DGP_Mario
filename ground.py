@@ -1,3 +1,4 @@
+# stage1용 일반 Tile
 from pico2d import *
 
 n = 1

@@ -1,3 +1,5 @@
+# Gumba
+# (필요사항) 굼바가 벽에 부딪힐 때 이동방향 변경. 벽이 없을 때 낙하.
 from pico2d import *
 import game_framework
 import game_world

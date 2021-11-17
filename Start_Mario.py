@@ -1,3 +1,4 @@
+# 게임시작 파일
 import game_framework
 import pico2d
 import start_state

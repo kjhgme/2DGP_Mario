@@ -1,3 +1,5 @@
+# select_map_state 전용 마리오.
+# 변경 필요 X
 from pico2d import *
 import game_framework
 

@@ -1,3 +1,5 @@
+# stage 1.
+# ( 필요사항 ) 정확한 위치에 객체생성.
 from pico2d import *
 import game_framework
 import game_world

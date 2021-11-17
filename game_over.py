@@ -1,3 +1,4 @@
+# 게임에서 목숨을 전부 잃으면 나오는 state
 import game_framework
 import select_map_state
 from pico2d import *

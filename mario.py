@@ -1,3 +1,4 @@
+# ( 필요사항 ) 버섯, 꽃을 먹을 경우 mode 1, 2로 변경. 몬스터와 부딪히면 mode -1.
 from pico2d import *
 import game_framework
 import game_world

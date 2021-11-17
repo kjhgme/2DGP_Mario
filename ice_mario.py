@@ -1,3 +1,5 @@
+# stage3용 마리오
+# ( 필요사항 ) class Mario를 상속받게끔 변경. 바닥을 미끄러지게끔 변경.
 from pico2d import *
 import game_framework
 import game_over
