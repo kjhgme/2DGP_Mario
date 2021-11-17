@@ -20,7 +20,7 @@ class Gumba:
         self.frame = 0
         self.direction = 0
         self.x = 500
-        self.y = 80
+        self.y = 90
 
     def update(self):
         self.frame = (self.frame + GUMBA_SPEED_PPS * game_framework.frame_time) % 5
