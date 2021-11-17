@@ -1,7 +1,9 @@
 from pico2d import *
 import game_framework
-import title_state  # gamestate들 추가하기
 import game_world
+
+# gamestage들 추가하기
+import stage1
 
 from select_mario import SelectMario
 
@@ -54,7 +56,7 @@ def handle_events():
                     mario.selectY -= 1
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
                 if (mario.selectX, mario.selectY) == (-1, 1):
-                    print(1)
+                    game_framework.change_state(stage1)
                 elif (mario.selectX, mario.selectY) == (0, 1):
                     print(2)
                 elif (mario.selectX, mario.selectY) == (1, 1):
