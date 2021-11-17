@@ -63,7 +63,7 @@ class IdleState:
                     t = i / 100
                     mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioR/jump.png')
-                    i += 0.5
+                    i += 0.7
                     if i >= 100:
                         if mario.Touching == 0:
                             mario.jump = 0
@@ -74,7 +74,7 @@ class IdleState:
                     t = i / 100
                     mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioL/jump.png')
-                    i += 0.5
+                    i += 0.7
                     if i >= 100:
                         if mario.Touching == 0:
                             mario.jump = 0
@@ -117,7 +117,7 @@ class RunState:
                     t = i / 100
                     mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioR/jump.png')
-                    i += 0.5
+                    i += 0.7
                     if i >= 100:
                         if mario.Touching == 0:
                             mario.jump = 0
@@ -128,7 +128,7 @@ class RunState:
                     t = i / 100
                     mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioL/jump.png')
-                    i += 0.5
+                    i += 0.7
                     if i >= 100:
                         if mario.Touching == 0:
                             mario.jump = 0
