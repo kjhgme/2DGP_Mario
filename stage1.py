@@ -8,6 +8,7 @@ from ground import Ground
 name = "Stage1"
 ground = None
 mario = None
+background = None
 
 def collide(a, b):
     # fill here
@@ -21,14 +22,20 @@ def collide(a, b):
 
 def enter():
     global ground
-    ground = [Ground() for i in range(10)]
-    game_world.add_objects(ground, 0)
+    ground = Ground()
+    game_world.add_object(ground, 0)
 
     global mario
     mario = Mario()
     game_world.add_object(mario, 1)
 
+    global background
+    if background == None:
+        background = load_image('image/background.png')
+
 def exit():
+    global background
+    del background
     game_world.clear()
 
 def handle_events():
@@ -51,8 +58,7 @@ def update():
 
 def draw():
     clear_canvas()
-    #background.draw(1300, 350)
-    #image.draw(400, 300)
+    background.draw(1300, 350)
     for game_object in game_world.all_objects():
         game_object.draw()
     update_canvas()
