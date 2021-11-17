@@ -24,8 +24,8 @@ def collide(a, b):
 
 def enter():
     global ground
-    ground = IceGround()
-    game_world.add_object(ground, 0)
+    ground = [IceGround() for i in range(4)]
+    game_world.add_objects(ground, 0)
 
     global mario
     mario = Mario()

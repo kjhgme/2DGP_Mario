@@ -49,13 +49,13 @@ class IdleState:
             pass
 
     def do(mario):
-        global i
+        global JumpPoint, i
         if mario.mode == 0:
             if mario.dir == 1:
                 mario.image = load_image('image/mario/smallmario/marioR/stand.png')
-                if mario.jump == 1:
+                if mario.jump >= 1:
                     t = i / 100
-                    mario.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioR/jump.png')
                     i += 0.5
                     if i >= 100:
@@ -63,9 +63,9 @@ class IdleState:
                         i = 0
             elif mario.dir == -1:
                 mario.image = load_image('image/mario/smallmario/marioL/stand.png')
-                if mario.jump == 1:
+                if mario.jump >= 1:
                     t = i / 100
-                    mario.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioL/jump.png')
                     i += 0.5
                     if i >= 100:
@@ -98,16 +98,16 @@ class RunState:
             pass
 
     def do(mario):
-        global i
+        global JumpPoint, i
         mario.frame = (mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 22
         mario.x += mario.velocity * game_framework.frame_time
         mario.x = clamp(25, mario.x, 1600 - 25)
         if mario.mode == 0:
             if mario.dir == 1:
                 mario.image = load_image('image/mario/smallmario/marioR/' + str(int(mario.frame)) + '.png')
-                if mario.jump == 1:
+                if mario.jump >= 1:
                     t = i / 100
-                    mario.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioR/jump.png')
                     i += 0.5
                     if i >= 100:
@@ -115,9 +115,9 @@ class RunState:
                         i = 0
             elif mario.dir == -1:
                 mario.image = load_image('image/mario/smallmario/marioL/' + str(int(mario.frame)) + '.png')
-                if mario.jump == 1:
+                if mario.jump >= 1:
                     t = i / 100
-                    mario.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioL/jump.png')
                     i += 0.5
                     if i >= 100:
@@ -136,7 +136,6 @@ class Mario:
     def __init__(self):
         self.mode = 0       # mode 0 = small, 1 = big, 2 = flower
         self.x, self.y = 20, 100
-        self.p = self.y
         self.image = load_image('image/mario/smallmario/marioR/stand.png')
         self.font = load_font('ENCR10B.TTF', 16)
         self.dir = 1
@@ -152,20 +151,6 @@ class Mario:
 
     def mode(self):
         pass
-
-    def jump(self):
-        if self.mode == 0:
-            if self.dir == 1:
-                for i in range(0, 100, 1):
-                    t = i / 100
-                    self.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
-                self.image = load_image('image/mario/smallmario/marioR/jump.png')
-            elif self.dir == -1:
-                for i in range(0, 100, 1):
-                    t = i / 100
-                    self.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
-                self.image = load_image('image/mario/smallmario/marioL/jump.png')
-
 
     def add_event(self, event):
         self.event_que.insert(0, event)
