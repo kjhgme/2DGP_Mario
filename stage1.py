@@ -4,6 +4,7 @@ import game_world
 
 from mario import Mario
 from ground import Ground
+from gumba import Gumba
 
 name = "Stage1"
 ground = None
@@ -28,6 +29,10 @@ def enter():
     global mario
     mario = Mario()
     game_world.add_object(mario, 1)
+
+    global gumba
+    gumba = Gumba()
+    game_world.add_object(gumba, 2)
 
     global background
     if background == None:
