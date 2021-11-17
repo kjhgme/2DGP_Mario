@@ -15,19 +15,20 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
 # Mario Event
-RIGHT_DOWN, RIGHT_UP, LEFT_DOWN, LEFT_UP, UP_DOWN, SPACE = range(6)
+RIGHT_DOWN, RIGHT_UP, LEFT_DOWN, LEFT_UP, UP_DOWN,  SPACE = range(6)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
     (SDL_KEYDOWN, SDLK_LEFT): LEFT_DOWN,
     (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
-    (SDL_KEYDOWN, SDLK_UP) : UP_DOWN,
+    (SDL_KEYDOWN, SDLK_UP): UP_DOWN,
     (SDL_KEYDOWN, SDLK_SPACE): SPACE
 }
 
 # Mario States
-
+JumpPoint = 100
+i = 0
 class IdleState:
     def enter(mario, event):
         if event == RIGHT_DOWN:
@@ -38,6 +39,8 @@ class IdleState:
             mario.velocity -= RUN_SPEED_PPS
         elif event == LEFT_UP:
             mario.velocity += RUN_SPEED_PPS
+        elif event == UP_DOWN:
+            mario.jump += 1
 
     def exit(mario, event):
         if event == SPACE and mario.mode == 1:  # mode 숫자 변경필요
@@ -46,14 +49,35 @@ class IdleState:
             pass
 
     def do(mario):
-        if mario.dir == 1 and mario.mode == 0:
-            mario.image = load_image('image/mario/smallmario/marioR/stand.png')
-        elif mario.dir == -1 and mario.mode == 0:
-            mario.image = load_image('image/mario/smallmario/marioL/stand.png')
+        global i
+        if mario.mode == 0:
+            if mario.dir == 1:
+                mario.image = load_image('image/mario/smallmario/marioR/stand.png')
+                if mario.jump == 1:
+                    t = i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
+                    mario.image = load_image('image/mario/smallmario/marioR/jump.png')
+                    i += 0.5
+                    if i >= 100:
+                        mario.jump = 0
+                        i = 0
+            elif mario.dir == -1:
+                mario.image = load_image('image/mario/smallmario/marioL/stand.png')
+                if mario.jump == 1:
+                    t = i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
+                    mario.image = load_image('image/mario/smallmario/marioL/jump.png')
+                    i += 0.5
+                    if i >= 100:
+                        mario.jump = 0
+                        i = 0
+
+
+
 
     def draw(mario):        # mode 에 따라서 변경필요
+        if mario.mode == 0:
             mario.image.clip_draw(0, 0, 50, 80, mario.x, mario.y)
-
 
 class RunState:
     def enter(mario, event):
@@ -65,6 +89,8 @@ class RunState:
             mario.velocity -= RUN_SPEED_PPS
         elif event == LEFT_UP:
             mario.velocity += RUN_SPEED_PPS
+        elif event == UP_DOWN:
+            mario.jump += 1
         mario.dir = clamp(-1, mario.velocity, 1)
 
     def exit(mario, event):
@@ -72,13 +98,31 @@ class RunState:
             pass
 
     def do(mario):
+        global i
         mario.frame = (mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 22
         mario.x += mario.velocity * game_framework.frame_time
         mario.x = clamp(25, mario.x, 1600 - 25)
-        if mario.dir == 1 and mario.mode == 0:
-            mario.image = load_image('image/mario/smallmario/marioR/' + str(int(mario.frame)) + '.png')
-        elif mario.dir == -1 and mario.mode == 0:
-            mario.image = load_image('image/mario/smallmario/marioL/' + str(int(mario.frame)) + '.png')
+        if mario.mode == 0:
+            if mario.dir == 1:
+                mario.image = load_image('image/mario/smallmario/marioR/' + str(int(mario.frame)) + '.png')
+                if mario.jump == 1:
+                    t = i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
+                    mario.image = load_image('image/mario/smallmario/marioR/jump.png')
+                    i += 0.5
+                    if i >= 100:
+                        mario.jump = 0
+                        i = 0
+            elif mario.dir == -1:
+                mario.image = load_image('image/mario/smallmario/marioL/' + str(int(mario.frame)) + '.png')
+                if mario.jump == 1:
+                    t = i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
+                    mario.image = load_image('image/mario/smallmario/marioL/jump.png')
+                    i += 0.5
+                    if i >= 100:
+                        mario.jump = 0
+                        i = 0
 
     def draw(mario):
         mario.image.clip_draw(0, 0, 50, 80, mario.x, mario.y)
@@ -90,13 +134,15 @@ next_state_table = {
 
 class Mario:
     def __init__(self):
-        self.mode = 0
+        self.mode = 0       # mode 0 = small, 1 = big, 2 = flower
         self.x, self.y = 20, 100
+        self.p = self.y
         self.image = load_image('image/mario/smallmario/marioR/stand.png')
         self.font = load_font('ENCR10B.TTF', 16)
         self.dir = 1
         self.velocity = 0
         self.frame = 0
+        self.jump = 0
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
@@ -106,6 +152,20 @@ class Mario:
 
     def mode(self):
         pass
+
+    def jump(self):
+        if self.mode == 0:
+            if self.dir == 1:
+                for i in range(0, 100, 1):
+                    t = i / 100
+                    self.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
+                self.image = load_image('image/mario/smallmario/marioR/jump.png')
+            elif self.dir == -1:
+                for i in range(0, 100, 1):
+                    t = i / 100
+                    self.y = (2 * t ** 2 - 3 * t + 1) * 100 + (-4 * t ** 2 + 4 * t) * 300 + (2 * t ** 2 - t) * 100
+                self.image = load_image('image/mario/smallmario/marioL/jump.png')
+
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -130,3 +190,4 @@ class Mario:
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
+

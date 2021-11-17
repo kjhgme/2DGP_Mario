@@ -1,5 +1,6 @@
 from pico2d import *
 import game_framework
+import game_world
 
 # Gumba Move Speed
 GUMBA_PIXEL_PER_METER = (10.0 / 0.3)

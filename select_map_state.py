@@ -4,6 +4,7 @@ import game_world
 
 # gamestage들 추가하기
 import stage1
+import stage3
 
 from select_mario import SelectMario
 
@@ -60,7 +61,7 @@ def handle_events():
                 elif (mario.selectX, mario.selectY) == (0, 1):
                     print(2)
                 elif (mario.selectX, mario.selectY) == (1, 1):
-                    print(3)
+                    game_framework.change_state(stage3)
                 elif (mario.selectX, mario.selectY) == (-1, 0):
                     print(4)
                 elif (mario.selectX, mario.selectY) == (0, 0):

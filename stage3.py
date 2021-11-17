@@ -2,11 +2,11 @@ from pico2d import *
 import game_framework
 import game_world
 
-from mario import Mario
-from ground import Ground
+from ice_mario import Mario
+from ice_ground import IceGround
 from gumba import Gumba
 
-name = "Stage1"
+name = "Stage3"
 ground = None
 mario = None
 background = None
@@ -24,7 +24,7 @@ def collide(a, b):
 
 def enter():
     global ground
-    ground = Ground()
+    ground = IceGround()
     game_world.add_object(ground, 0)
 
     global mario
