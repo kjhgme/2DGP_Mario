@@ -3,6 +3,7 @@
 from pico2d import *
 import game_framework
 import game_world
+import collision
 
 from mario import Mario
 from ground import Ground
@@ -14,15 +15,6 @@ mario = None
 background = None
 gumbas = []
 
-def collide(a, b):
-    # fill here
-    left_a, bottom_a, right_a, top_a = a.get_bb()
-    left_b, bottom_b, right_b, top_b = b.get_bb()
-    if left_a > right_b: return False
-    if right_a < left_b: return False
-    if top_a < bottom_b: return False
-    if bottom_a > top_b: return False
-    return True
 
 def enter():
     global ground
@@ -60,7 +52,7 @@ def update():
     for game_object in game_world.all_objects():
         game_object.update()
     for gumba in gumbas:
-        if collide(mario, gumba):
+        if collision.collide(mario, gumba):
             gumba.image = load_image('image/monster/gumba/dead.png')
             gumbas.remove(gumba)
             game_world.remove_object(gumba)

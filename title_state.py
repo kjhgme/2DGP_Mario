@@ -4,11 +4,12 @@ from pico2d import *
 
 name = "TitleState"
 image = None
-
+start_image = None
 
 def enter():
-    global image
-    image = load_image('image/star.png')
+    global image, start_image
+    image = load_image('image/main.jpg')
+    start_image = load_image('image/press_space_to_start.png')
 
 def exit():
     global image

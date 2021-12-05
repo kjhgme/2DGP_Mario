@@ -1,5 +1,7 @@
 # stage3용 ice tile
 from pico2d import *
+import collision
+import server
 
 n = 4
 class IceGround:
@@ -10,7 +12,8 @@ class IceGround:
         n += 8
 
     def update(self):
-        pass
+        if collision.collide(self, server.mario):
+            server.mario.stop_falling()
 
     def draw(self):
         self.image.clip_draw(0, 448, 64*4, 64, self.x, self.y)
