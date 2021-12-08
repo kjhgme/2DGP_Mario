@@ -1,4 +1,4 @@
-# 맵 선택 state. 현재 1, 3만 구현.
+# 맵 선택 state.
 from pico2d import *
 import game_framework
 import game_world
@@ -6,6 +6,7 @@ import game_world
 # gamestage들 추가하기
 import stage1
 import stage3
+import stage4
 
 from select_mario import SelectMario
 
@@ -64,7 +65,7 @@ def handle_events():
                 elif (mario.selectX, mario.selectY) == (1, 1):
                     game_framework.change_state(stage3)
                 elif (mario.selectX, mario.selectY) == (-1, 0):
-                    print(4)
+                    game_framework.change_state(stage4)
                 elif (mario.selectX, mario.selectY) == (0, 0):
                     print(5)
                 elif (mario.selectX, mario.selectY) == (1, 0):

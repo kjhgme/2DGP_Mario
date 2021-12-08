@@ -2,7 +2,7 @@ import server
 
 from pico2d import *
 
-class ClassicBackground:
+class Background:
     def __init__(self):
         self.image = load_image('image/background.png')
         self.canvas_width = get_canvas_width()  # 2666

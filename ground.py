@@ -1,6 +1,9 @@
 # stage1용 일반 Tile
 from pico2d import *
 
+import collision
+import server
+
 n = 1
 class Ground:
     def __init__(self):
@@ -11,6 +14,7 @@ class Ground:
 
     def update(self):
         pass
+
 
     def draw(self):
         self.image.clip_draw(1280, 0, 64, 64, self.x, self.y)
