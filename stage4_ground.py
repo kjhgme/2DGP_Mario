@@ -17,7 +17,7 @@ class Ground:
         self.__dict__.update(state)
 
     def update(self):
-        if collision.collide_foot_and_brick(self, server.mario):
+        if collision.collide_foot_and_brick(server.mario, self):
             server.mario.Touching = 0
             server.mario.JumpPoint = server.mario.y
 

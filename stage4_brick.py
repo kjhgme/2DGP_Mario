@@ -22,11 +22,11 @@ class Brick:
         if collision.collide(self, server.mario):
             pass
 
-        if collision.collide_foot_and_brick(self, server.mario):
+        if collision.collide_foot_and_brick(server.mario, self):
             server.mario.Touching = 0
             server.mario.JumpPoint = server.mario.y
 
-        if collision.collide(self, server.mario) and server.mario.mode == 1:
+        if collision.collide_head_and_brick(server.mario, self) and server.mario.mode == 1:
             game_world.remove_object(self)
 
     def draw(self):

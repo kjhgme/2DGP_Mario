@@ -36,11 +36,11 @@ class QBrick:
         if collision.collide(self, server.mario):
             pass
 
-        if collision.collide_foot_and_brick(self, server.mario):
+        if collision.collide_foot_and_brick(server.mario, self):
             server.mario.Touching = 0
             server.mario.JumpPoint = server.mario.y
 
-        if collision.collide_head_and_brick(self, server.mario):
+        if collision.collide_head_and_brick(server.mario, self):
             self.imagePartX = 0
             self.imagePartY = 2048-(64*4)
 
