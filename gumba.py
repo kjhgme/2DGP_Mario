@@ -1,10 +1,14 @@
 # Gumba
 # (필요사항) 굼바가 벽에 부딪힐 때 이동방향 변경. 벽이 없을 때 낙하.
 from pico2d import *
+
+import collision
 import game_framework
 import game_world
 
 # Gumba Move Speed
+import server
+
 GUMBA_PIXEL_PER_METER = (10.0 / 0.3)
 GUMBA_SPEED_KMPH = 10.0
 GUMBA_SPEED_MPM = (GUMBA_SPEED_KMPH * 1000.0 / 60.0)

@@ -3,6 +3,7 @@ mario = None
 background = None
 gumbas = []
 bricks = []
+Qbricks = []
 mushrooms = []
 fireflowers = []
 coins = []

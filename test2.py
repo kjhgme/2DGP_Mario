@@ -1,12 +1,14 @@
-# stage3용 마리오
-# ( 필요사항 ) class Mario를 상속받게끔 변경. 바닥을 미끄러지게끔 변경.
+# stage4용 마리오
 from pico2d import *
+
+import collision
 import game_framework
 import game_over
-
-# Mario Run Speed
 import server
 
+from stage4_brick import Brick
+
+# Mario Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -21,7 +23,6 @@ FRAMES_PER_ACTION = 8
 
 # Mario Event
 RIGHT_DOWN, RIGHT_UP, LEFT_DOWN, LEFT_UP, UP_DOWN,  SPACE = range(6)
-
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
@@ -32,9 +33,6 @@ key_event_table = {
 }
 
 # Mario States
-JumpPoint = 100
-i = 0
-
 class IdleState:
     def enter(mario, event):
         if event == RIGHT_DOWN:
@@ -47,6 +45,7 @@ class IdleState:
             mario.velocity += RUN_SPEED_PPS
         elif event == UP_DOWN:
             mario.jump += 1
+            mario.Touching = 1
 
     def exit(mario, event):
         if event == SPACE and mario.mode == 2:  # mode 숫자 변경필요
@@ -55,44 +54,86 @@ class IdleState:
             pass
 
     def do(mario):
-        global JumpPoint, i, n
-        if mario.Touching == 1:
-            mario.y -= FALL_SPEED * game_framework.frame_time
         if mario.mode == 0:
             if mario.dir == 1:
                 mario.image = load_image('image/mario/smallmario/marioR/stand.png')
                 if mario.jump >= 1:
-                    t = i / 100
-                    mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioR/jump.png')
-                    i += 0.7
-                    if i >= 100:
+                    mario.i += 0.5
+                    if mario.i >= 100:
                         if mario.Touching == 0:
                             mario.jump = 0
-                            i = 0
+                            mario.i = 0
             elif mario.dir == -1:
                 mario.image = load_image('image/mario/smallmario/marioL/stand.png')
                 if mario.jump >= 1:
-                    t = i / 100
-                    mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioL/jump.png')
-                    i += 0.7
-                    if i >= 100:
+                    mario.i += 0.5
+                    if mario.i >= 100:
                         if mario.Touching == 0:
                             mario.jump = 0
-                            i = 0
-
+                            mario.i = 0
+        elif mario.mode == 1:
+            if mario.dir == 1:
+                mario.image = load_image('image/mario/bigmario/marioR/stand.png')
+                if mario.jump >= 1:
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
+                    mario.image = load_image('image/mario/bigmario/marioR/jump.png')
+                    mario.i += 0.5
+                    if mario.i >= 100:
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            mario.i = 0
+            elif mario.dir == -1:
+                mario.image = load_image('image/mario/bigmario/marioL/stand.png')
+                if mario.jump >= 1:
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
+                    mario.image = load_image('image/mario/bigmario/marioL/jump.png')
+                    mario.i += 0.5
+                    if mario.i >= 100:
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            mario.i = 0
+        elif mario.mode == 2:
+            if mario.dir == 1:
+                mario.image = load_image('image/mario/bigmario/marioR/stand.png')
+                if mario.jump >= 1:
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
+                    mario.image = load_image('image/mario/bigmario/marioR/jump.png')
+                    mario.i += 0.5
+                    if mario.i >= 100:
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            mario.i = 0
+            elif mario.dir == -1:
+                mario.image = load_image('image/mario/bigmario/marioL/stand.png')
+                if mario.jump >= 1:
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
+                    mario.image = load_image('image/mario/bigmario/marioL/jump.png')
+                    mario.i += 0.5
+                    if mario.i >= 100:
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            mario.i = 0
+        if mario.Touching == 1:
+            mario.y -= FALL_SPEED * game_framework.frame_time
 
     def draw(mario):        # mode 에 따라서 변경필요
-        cx, cy = mario.x - server.background.window_left, mario.y - server.background.window_bottom
         if mario.mode == 0:
-            #mario.image.clip_draw(0, 0, 50, 80, cx, cy)
-            if mario.velocity >= 0:
-                mario.image.clip_draw(0, 0, 50, 80, cx, cy)
-                mario.dir = 1
-            elif mario.velocity < 0:
-                mario.image.clip_draw(0, 0, 50, 80, cx, cy)
-                mario.dir = -1
+            mario.image.clip_draw(0, 0, 50, 80, mario.x, mario.y)
+        elif mario.mode == 1:
+            mario.image.clip_draw(0, 0, 80, 100, mario.x, mario.y)
+        elif mario.mode == 2:
+            mario.image.clip_draw(0, 0, 80, 100, mario.x, mario.y)
+
 
 class RunState:
     def enter(mario, event):
@@ -106,16 +147,14 @@ class RunState:
             mario.velocity += RUN_SPEED_PPS
         elif event == UP_DOWN:
             mario.jump += 1
+            mario.Touching = 1
         mario.dir = clamp(-1, mario.velocity, 1)
 
     def exit(mario, event):
-        if event == SPACE and mario.mode == 2:  # mode 숫자 변경필요
+        if event == SPACE and mario.mode == 1:  # mode 숫자 변경필요
             pass
 
     def do(mario):
-        global JumpPoint, i
-        if mario.Touching == 1:
-            mario.y -= FALL_SPEED * game_framework.frame_time
         mario.frame = (mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 22
         mario.x += mario.velocity * game_framework.frame_time
         mario.x = clamp(25, mario.x, 1600 - 25)
@@ -123,35 +162,82 @@ class RunState:
             if mario.dir == 1:
                 mario.image = load_image('image/mario/smallmario/marioR/' + str(int(mario.frame)) + '.png')
                 if mario.jump >= 1:
-                    t = i / 100
-                    mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioR/jump.png')
-                    i += 0.7
-                    if i >= 100:
+                    mario.i += 0.5
+                    if mario.i >= 100:
                         if mario.Touching == 0:
                             mario.jump = 0
-                            i = 0
+                            mario.i = 0
             elif mario.dir == -1:
                 mario.image = load_image('image/mario/smallmario/marioL/' + str(int(mario.frame)) + '.png')
                 if mario.jump >= 1:
-                    t = i / 100
-                    mario.y = (2 * t ** 2 - 3 * t + 1) * JumpPoint + (-4 * t ** 2 + 4 * t) * (JumpPoint+200) + (2 * t ** 2 - t) * JumpPoint
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
                     mario.image = load_image('image/mario/smallmario/marioL/jump.png')
-                    i += 0.7
-                    if i >= 100:
+                    mario.i += 0.5
+                    if mario.i >= 100:
                         if mario.Touching == 0:
                             mario.jump = 0
-                            i = 0
+                            mario.i = 0
+        elif mario.mode == 1:
+            if mario.dir == 1:
+                mario.image = load_image('image/mario/bigmario/marioR/' + str(int(mario.frame)) + '.png')
+                if mario.jump >= 1:
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
+                    mario.image = load_image('image/mario/bigmario/marioR/jump.png')
+                    mario.i += 0.5
+                    if mario.i >= 100:
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            mario.i = 0
+            elif mario.dir == -1:
+                mario.image = load_image('image/mario/bigmario/marioL/' + str(int(mario.frame)) + '.png')
+                if mario.jump >= 1:
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
+                    mario.image = load_image('image/mario/bigmario/marioL/jump.png')
+                    mario.i += 0.5
+                    if mario.i >= 100:
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            mario.i = 0
+        elif mario.mode == 2:
+            if mario.dir == 1:
+                mario.image = load_image('image/mario/bigmario/marioR/' + str(int(mario.frame)) + '.png')
+                if mario.jump >= 1:
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
+                    mario.image = load_image('image/mario/bigmario/marioR/jump.png')
+                    mario.i += 0.5
+                    if mario.i >= 100:
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            mario.i = 0
+            elif mario.dir == -1:
+                mario.image = load_image('image/mario/bigmario/marioL/' + str(int(mario.frame)) + '.png')
+                if mario.jump >= 1:
+                    t = mario.i / 100
+                    mario.y = (2 * t ** 2 - 3 * t + 1) * mario.JumpPoint + (-4 * t ** 2 + 4 * t) * (mario.JumpPoint+200) + (2 * t ** 2 - t) * mario.JumpPoint
+                    mario.image = load_image('image/mario/bigmario/marioL/jump.png')
+                    mario.i += 0.5
+                    if mario.i >= 100:
+                        if mario.Touching == 0:
+                            mario.jump = 0
+                            mario.i = 0
+
+        if mario.Touching == 1:
+            mario.y -= FALL_SPEED * game_framework.frame_time
 
     def draw(mario):
-        cx, cy = mario.x - server.background.window_left, mario.y - server.background.window_bottom
-        #mario.image.clip_draw(0, 0, 50, 80, cx, cy)
-        if mario.velocity > 0:
-            mario.image.clip_draw(0, 0, 50, 80, cx, cy)
-            mario.dir = 1
-        elif mario.velocity < 0:
-            mario.image.clip_draw(0, 0, 50, 80, cx, cy)
-            mario.dir = -1
+        if mario.mode == 0:
+            mario.image.clip_draw(0, 0, 50, 80, mario.x, mario.y)
+        elif mario.mode == 1:
+            mario.image.clip_draw(0, 0, 80, 100, mario.x, mario.y)
+        elif mario.mode == 2:
+            mario.image.clip_draw(0, 0, 80, 100, mario.x, mario.y)
 
 next_state_table = {
     IdleState: {RIGHT_DOWN: RunState, RIGHT_UP: IdleState, LEFT_DOWN: RunState, LEFT_UP: IdleState, UP_DOWN: IdleState, SPACE: IdleState},
@@ -172,17 +258,46 @@ class Mario:
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
+        self.time = 0
+        self.JumpPoint = 100
+        self.i = 0
 
     def get_bb(self):
-        return self.x - 20, self.y - 40, self.x + 20, self.y + 40
+        if self.mode == 0:
+            return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+        elif self.mode == 1:
+            return self.x - 30, self.y - 20, self.x + 30, self.y + 20
+        elif self.mode == 2:
+            return self.x - 30, self.y - 20, self.x + 30, self.y + 20
 
-    def mode(self):
-        pass
+    def mario_foot(self):
+        if self.mode == 0:
+            return self.x - 15, self.y - 40, self.x + 15, self.y - 20
+        elif self.mode == 1:
+            return self.x - 25, self.y - 50, self.x + 25, self.y - 20
+        elif self.mode == 2:
+            return self.x - 25, self.y - 50, self.x + 25, self.y - 20
+
+    def mario_head(self):
+        if self.mode == 0:
+            return self.x - 20, self.y - 20, self.x + 20, self. y + 40
+        elif self.mode == 1:
+            return self.x - 30, self.y - 20, self.x + 30, self. y + 50
+        elif self.mode == 2:
+            return self.x - 30, self.y - 20, self.x + 30, self.y + 50
+
+    def timer(self):
+        print(self.time)
+        self.time += 1
+        if self.time == 100:
+            self.time = 0
+
 
     def add_event(self, event):
         self.event_que.insert(0, event)
 
     def update(self):
+        global i
         self.cur_state.do(self)
         if len(self.event_que) > 0:
             event = self.event_que.pop()
@@ -192,21 +307,22 @@ class Mario:
         if self.y <= -10:
             game_framework.change_state(game_over)
 
-        self.x = clamp(50, self.x, server.background.w-50)
-        self.y = clamp(50, self.y, server.background.h-50)
+        self.x = clamp(50, self.x, server.background.w - 50)
+        self.y = clamp(50, self.y, server.background.h - 50)
+
+
+
 
     def draw(self):
         self.cur_state.draw(self)
         self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
         debug_print(
             'Velocity : ' + str(self.velocity) + ' Dir : ' + str(self.dir) + 'State : ' + str(self.cur_state.__name__))
-
         draw_rectangle(*self.get_bb())
+        draw_rectangle(*self.mario_foot())
+        draw_rectangle(*self.mario_head())
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
-
-    def stop_falling(self):
-        pass

@@ -29,14 +29,14 @@ def enter():
     with open('stage4_brick_data.json', 'r') as f:      # 일반 벽돌
         brick_data_list = json.load(f)
     for data in brick_data_list:
-        brick = Brick(data['x'], data['y'])
-        game_world.add_object(brick, 1)
+        server.bricks = Brick(data['x'], data['y'])
+        game_world.add_object(server.bricks, 1)
 
     with open('stage4_Qbrick_data.json', 'r') as f:      # ? 벽돌
         Qbrick_data_list = json.load(f)
     for data in Qbrick_data_list:
-        Qbrick = QBrick(data['name'], data['x'], data['y'])
-        game_world.add_object(Qbrick, 1)
+        server.Qbricks = QBrick(data['name'], data['x'], data['y'])
+        game_world.add_object(server.Qbricks, 1)
 
     with open('stage4_gumba_data.json', 'r') as f:      # 굼바
         gumba_data_list = json.load(f)
@@ -44,6 +44,10 @@ def enter():
         server.gumbas = Gumba(data['x'])
         game_world.add_object(server.gumbas, 1)
 
+    server.grounds = ground_data_list
+    server.bricks = brick_data_list
+    server.Qbricks = Qbrick_data_list
+    server.gumbas = gumba_data_list
 
     server.mario = Mario()
     game_world.add_object(server.mario, 1)

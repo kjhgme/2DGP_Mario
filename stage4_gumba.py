@@ -9,6 +9,7 @@ import background
 import game_world
 import server
 import game_over
+from stage4_ground import Ground
 from BehaviorTree import BehaviorTree, SelectorNode, SequenceNode, LeafNode
 
 # Gumba Move Speed
@@ -29,7 +30,7 @@ class Gumba:
         self.frame = 0
         self.dir = 0
         self.x = x * GUMBA_PIXEL_PER_METER
-        self.y = 90
+        self.y = 85
 
     def __getstate__(self):
         state = {'x': self.x, 'y': self.y, 'dir': self.dir}
@@ -54,6 +55,9 @@ class Gumba:
         elif self.x <= 25:
             self.dir -= 1
 
+        if self.x > 532:
+            self.y -= 200 * game_framework.frame_time
+
         if collision.collide_foot_and_head(server.mario, self):
             self.image = load_image('image/monster/gumba/dead.png')
             game_world.remove_object(self)
@@ -63,19 +67,21 @@ class Gumba:
                 if server.mario.time == 0:
                     game_framework.change_state(game_over)
             elif server.mario.mode == 1:
-                    server.mario.mode = 0
-                    server.mario.timer()
+                server.mario.mode = 0
+                server.mario.timer()
+            elif server.mario.mode == 2:
+                server.mario.mode = 1
+                server.mario.timer()
+
 
 
 
 
     def draw(self):
-        self.image.clip_draw(0, 0, 50, 60, self.x, self.y)
-        draw_rectangle(*self.get_bb())
-        draw_rectangle(*self.gumba_head())
+        self.image.clip_draw(0, 0, 40, 40, self.x, self.y)
 
     def get_bb(self):
-        return self.x-25, self.y-30, self.x+25, self.y+10
+        return self.x-20, self.y-20, self.x+20, self.y+20
 
     def gumba_head(self):
-        return self.x-25, self.y+10, self.x+25, self.y+30
+        return self.x-20, self.y+20, self.x+20, self.y+20

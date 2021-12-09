@@ -21,11 +21,11 @@ class FireFlower:
     def update(self):
         if collision.collide(self, server.mario):
             game_world.remove_object(self)
+            server.mario.mode = 2
 
     def draw(self):
         self.image.clip_draw(0, 0, 64, 64, self.x, self.y)
 
-        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         return self.x-32, self.y-32, self.x+32, self.y+32

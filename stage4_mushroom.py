@@ -5,6 +5,7 @@ import collision
 import game_framework
 import server
 import game_world
+import stage4
 
 # Mushroom Move Speed
 MUSHROOM_PIXEL_PER_METER = (10.0 / 0.3)
@@ -23,8 +24,10 @@ class Mushroom:
         self.image = load_image('image/mushroom.png')
         self.frame = 0
         self.dir = 0
+        self.fallingspeed = 0
         self.x = x
         self.y = y
+        self.Touching = 0
 
     def __getstate__(self):
         state = {'x': self.x, 'y': self.y, 'dir': self.dir}
@@ -36,6 +39,7 @@ class Mushroom:
 
     def update(self):
         self.frame = (self.frame + MUSHROOM_SPEED_PPS * game_framework.frame_time) % 5
+
 
         if self.dir <= 0:
             self.x += game_framework.frame_time * MUSHROOM_SPEED_PPS
@@ -49,11 +53,14 @@ class Mushroom:
 
         if collision.collide(self, server.mario):
             game_world.remove_object(self)
-            server.mario.mode = 1
+            if server.mario.mode == 2:
+                pass
+            elif server.mario.mode == 0:
+                server.mario.mode = 1
+
 
     def draw(self):
         self.image.clip_draw(0, 0, 64, 64, self.x, self.y)
-        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         return self.x-32, self.y-32, self.x+32, self.y+32

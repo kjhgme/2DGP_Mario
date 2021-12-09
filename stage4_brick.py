@@ -20,19 +20,20 @@ class Brick:
 
     def update(self):
         if collision.collide(self, server.mario):
-            pass
+            server.mario.Touching = 0
 
         if collision.collide_foot_and_brick(server.mario, self):
             server.mario.Touching = 0
-            server.mario.JumpPoint = server.mario.y
 
-        if collision.collide_head_and_brick(server.mario, self) and server.mario.mode == 1:
+        if collision.collide_head_and_brick(server.mario, self) and (server.mario.mode == 1 or server.mario.mode == 2):
             game_world.remove_object(self)
+            server.mario.Touching = 0
+        elif collision.collide_head_and_brick(server.mario, self) and server.mario.mode == 0:
+            server.mario.Touching = 0
 
     def draw(self):
-        self.image.clip_draw(320, 2048-64, 64, 64, self.x, self.y)
+        self.image.clip_draw(320+2, 2048-64+2, 60, 60, self.x, self.y)
 
-        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         return self.x-32, self.y-32, self.x+32, self.y+32

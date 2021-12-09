@@ -34,11 +34,10 @@ class QBrick:
             game_world.add_object(server.fireflowers, 1)
 
         if collision.collide(self, server.mario):
-            pass
+            server.mario.Touching = 0
 
         if collision.collide_foot_and_brick(server.mario, self):
             server.mario.Touching = 0
-            server.mario.JumpPoint = server.mario.y
 
         if collision.collide_head_and_brick(server.mario, self):
             self.imagePartX = 0
@@ -46,15 +45,13 @@ class QBrick:
 
             if self.name == "mushroom":
                 self.m += 1
-                print(self.m)
             elif self.name == "fireflower":
                 self.f += 1
                 pass
 
     def draw(self):
-        self.image.clip_draw(self.imagePartX, self.imagePartY, 64, 64, self.x, self.y)
+        self.image.clip_draw(self.imagePartX+2, self.imagePartY+2, 60, 60, self.x, self.y)
 
-        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         return self.x-32, self.y-32, self.x+32, self.y+32
